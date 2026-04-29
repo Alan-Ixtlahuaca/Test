@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -135,8 +135,11 @@
     })
     .then(res => res.json())
     .then(data => {
+      let diag = data.diagnostico;
+      let imgHtml = `<img src="imagenes/${diag}.png" alt="${diag}" style="width: 100%; border-radius: 10px; margin-top: 15px;">`;
+
       resultado.innerHTML =
-        "Diagnóstico: <br><strong>" + data.diagnostico + "</strong>";
+        "Diagnóstico: <br><strong>" + diag + "</strong>" + imgHtml;
     })
     .catch(() => {
       resultado.innerHTML =

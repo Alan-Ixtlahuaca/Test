@@ -1,0 +1,64 @@
+GUÍA PARA SACAR CADA DIAGNÓSTICO EN EL SISTEMA EXPERTO
+
+A continuación se muestra qué preguntas debes responder con "Sí" para obtener cada uno de los diagnósticos disponibles en tu base de conocimientos de Prolog.
+
+==================================================
+DIAGNÓSTICOS DISPONIBLES EN TU PÁGINA ACTUAL
+==================================================
+Con las 10 preguntas que tienes actualmente en `pagina.html`, puedes sacar los siguientes resultados:
+
+1. DEPRESIÓN (depresion)
+   Responde "Sí" a:
+   - ¿Te sientes triste?
+   - ¿Perdiste interés en cosas?
+   - ¿Te sientes sin esperanza?
+
+2. ANSIEDAD (ansiedad)
+   Responde "Sí" a:
+   - ¿Tienes nerviosismo?
+   - ¿Te preocupas demasiado?
+
+3. ATAQUES DE PÁNICO (panico)
+   Responde "Sí" a:
+   - ¿Miedo intenso repentino?
+   - ¿Falta de respiración?
+
+4. TRASTORNO DEL SUEÑO (trastorno_sueno)
+   Responde "Sí" a:
+   - ¿Problemas para dormir?
+   - ¿Te despiertas mucho?
+
+5. ESQUIZOFRENIA (esquizofrenia)
+   Responde "Sí" a:
+   - ¿Ves u oyes cosas?
+
+6. SIN DIAGNÓSTICO
+   - Responde "No" a absolutamente todas las preguntas.
+
+
+==================================================
+DIAGNÓSTICOS OCULTOS (FALTAN PREGUNTAS EN HTML)
+==================================================
+Tu archivo Prolog (`mental_sencillo.pl`) tiene 4 trastornos más, pero actualmente NO ES POSIBLE sacarlos en la página web porque te faltan las preguntas para esos síntomas en tu HTML. 
+
+Para poder sacar estos resultados y ver las imágenes correspondientes, debes copiar y pegar este código dentro del arreglo `const preguntas = [...]` en tu archivo `pagina.html`:
+
+7. TRASTORNO BIPOLAR (trastorno_bipolar)
+   { id: "cambios_humor_extremos", texto: "¿Tienes cambios de humor muy extremos?" },
+   { id: "mania_euforia", texto: "¿Sientes momentos de euforia exagerada?" },
+   { id: "impulsividad", texto: "¿Actúas con mucha impulsividad?" },
+
+8. TRASTORNO OBSESIVO COMPULSIVO (trastorno_obsesivo_compulsivo)
+   { id: "pensamientos_intrusivos", texto: "¿Tienes pensamientos intrusivos constantes?" },
+   { id: "compulsiones_repetitivas", texto: "¿Sientes necesidad de repetir acciones?" },
+   { id: "necesidad_orden", texto: "¿Tienes una necesidad extrema de orden y simetría?" },
+
+9. ESTRÉS POSTRAUMÁTICO (estres_postraumatico)
+   { id: "flashbacks", texto: "¿Revives traumas del pasado constantemente (flashbacks)?" },
+   { id: "pesadillas", texto: "¿Tienes pesadillas frecuentes?" },
+   { id: "hipervigilancia", texto: "¿Estás siempre en estado de alerta o asustadizo?" },
+
+10. TRASTORNO DE LA ALIMENTACIÓN (trastorno_alimentacion)
+   { id: "distorsion_imagen_corporal", texto: "¿Percibes tu cuerpo diferente a la realidad?" },
+   { id: "restriccion_alimentaria", texto: "¿Evitas comer o comes muy poco intencionalmente?" },
+   { id: "atracones", texto: "¿Sueles darte atracones de comida en los que pierdes el control?" }

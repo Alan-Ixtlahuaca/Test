@@ -66,7 +66,8 @@ diagnostico_handler(Request) :-
 
 cargar_sintomas([]).
 cargar_sintomas([H|T]) :-
-    assertz(si(H)),
+    atom_string(AtomH, H),
+    assertz(si(AtomH)),
     cargar_sintomas(T).
 
 tiene(S) :- si(S).
@@ -79,4 +80,5 @@ score(E, Score) :-
 mejor_diagnostico(Mejor) :-
     findall(S-E, score(E, S), Lista),
     Lista \= [],
-    sort(0, @>=, Lista, [_-Mejor|_]).
+    sort(0, @>=, Lista, [MaxScore-Mejor|_]),
+    MaxScore > 0.
