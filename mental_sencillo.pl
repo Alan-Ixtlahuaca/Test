@@ -19,3 +19,57 @@ tiene_trastorno(Trastorno) :-
     enfermedad(Trastorno, ListaSintomas),
     si(Sintoma),
     member(Sintoma, ListaSintomas).
+
+
+
+
+
+:- use_module(library(http/thread_httpd)).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/http_json)).
+:- use_module(library(http/http_cors)).
+
+server(Port) :-
+    http_server(http_dispatch, [port(Port)]),
+    format('Servidor activo en puerto ~w~n', [Port]).
+
+% SOLO UNA VEZ
+:- http_handler('/diagnostico', diagnostico_handler, [methods([post])]).
+
+diagnostico_handler(Request) :-
+    cors_enable(Request, [methods([post]), origin('*')]),
+
+    catch(
+        ( http_read_json_dict(Request, Data),
+          Sintomas = Data.sintomas,
+
+          retractall(si(_)),
+          cargar_sintomas(Sintomas),
+
+          ( mejor_diagnostico(Resultado)
+          -> true
+          ;  Resultado = 'Sin diagnóstico disponible'
+          ),
+
+          reply_json_dict(_{diagnostico: Resultado})
+        ),
+        Error,
+        reply_json_dict(_{error: Error})
+    ).
+
+cargar_sintomas([]).
+cargar_sintomas([H|T]) :-
+    assertz(si(H)),
+    cargar_sintomas(T).
+
+tiene(S) :- si(S).
+
+score(E, Score) :-
+    enfermedad(E, Lista),
+    findall(S, (member(S, Lista), tiene(S)), Coinc),
+    length(Coinc, Score).
+
+mejor_diagnostico(Mejor) :-
+    findall(S-E, score(E, S), Lista),
+    Lista \= [],
+    sort(0, @>=, Lista, [_-Mejor|_]).

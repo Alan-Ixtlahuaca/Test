@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Experto - Prolog</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 { text-align: center; }
+
+    .pregunta {
+      font-size: 18px;
+      margin: 20px 0;
+      min-height: 50px;
+    }
+
+    .botones {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .si { background: #28a745; color: white; }
+    .no { background: #dc3545; color: white; }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .progreso {
+      margin-top: 10px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Sistema Experto (Prolog)</h1>
+
+  <div class="pregunta" id="pregunta"></div>
+
+  <div class="botones">
+    <button class="si" onclick="responder(true)">Sí</button>
+    <button class="no" onclick="responder(false)">No</button>
+  </div>
+
+  <div class="progreso" id="progreso"></div>
+
+  <div id="resultado"></div>
+</div>
+
+<script>
+  const preguntas = [
+    { id: "tristeza", texto: "¿Te sientes triste?" },
+    { id: "perdida_interes", texto: "¿Perdiste interés en cosas?" },
+    { id: "sin_esperanza", texto: "¿Te sientes sin esperanza?" },
+
+    { id: "nerviosismo", texto: "¿Tienes nerviosismo?" },
+    { id: "preocupacion", texto: "¿Te preocupas demasiado?" },
+
+    { id: "miedo_intenso", texto: "¿Miedo intenso repentino?" },
+    { id: "falta_respiracion", texto: "¿Falta de respiración?" },
+
+    { id: "insomnio", texto: "¿Problemas para dormir?" },
+    { id: "despertar_frecuente", texto: "¿Te despiertas mucho?" },
+
+    { id: "alucinaciones", texto: "¿Ves u oyes cosas?" }
+  ];
+
+  let index = 0;
+  const sintomas = [];
+
+  const pregunta = document.getElementById("pregunta");
+  const progreso = document.getElementById("progreso");
+  const resultado = document.getElementById("resultado");
+
+  function mostrarPregunta() {
+    if (index >= preguntas.length) {
+      enviarProlog();
+      return;
+    }
+
+    pregunta.textContent = preguntas[index].texto;
+    progreso.textContent = `Pregunta ${index + 1} de ${preguntas.length}`;
+  }
+
+  function responder(si) {
+    if (si) {
+      sintomas.push(preguntas[index].id);
+    }
+
+    index++;
+    mostrarPregunta();
+  }
+
+  // =========================
+  // CONEXIÓN A PROLOG
+  // =========================
+  function enviarProlog() {
+    resultado.innerHTML = "Consultando Prolog...";
+
+    fetch("http://127.0.0.1:8080/diagnostico", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ sintomas })
+    })
+    .then(res => res.json())
+    .then(data => {
+      resultado.innerHTML =
+        "Diagnóstico: <br><strong>" + data.diagnostico + "</strong>";
+    })
+    .catch(() => {
+      resultado.innerHTML =
+        "❌ Error: Prolog no responde o CORS bloqueado";
+    });
+  }
+
+  mostrarPregunta();
+</script>
+
+</body>
+</html>
