@@ -29,12 +29,19 @@ tiene_trastorno(Trastorno) :-
 :- use_module(library(http/http_json)).
 :- use_module(library(http/http_cors)).
 
+:- set_setting(http:cors, [*]).
+
 server(Port) :-
     http_server(http_dispatch, [port(Port)]),
     format('Servidor activo en puerto ~w~n', [Port]).
 
 % SOLO UNA VEZ
-:- http_handler('/diagnostico', diagnostico_handler, [methods([post])]).
+:- http_handler('/diagnostico', diagnostico_handler, [methods([post, options])]).
+
+diagnostico_handler(Request) :-
+    option(method(options), Request), !,
+    cors_enable(Request, [methods([post])]),
+    format('Content-type: text/plain~n~n').
 
 diagnostico_handler(Request) :-
     cors_enable(Request, [methods([post]), origin('*')]),
